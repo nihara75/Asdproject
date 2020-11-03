@@ -1,35 +1,34 @@
 const router = require('express').Router();
 const bcrypt=require('bcrypt');
+const mysql=require('mysql');
 const saltRounds = 10;
-
+const con = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'Nihar@25*',
+    database: 'Volunteer'  //your db name
+});
 const logged=false;
 
 router.post('/Login',function(req,res){
-//reference code
-  /*const username=req.body.username;
-  const password=req.body.password;
+let name=req.body.name;
+let password=req.body.password;
+con.query("SELECT NAME,PASSWORD FROM REGISTER WHERE NAME=? AND PASSWORD=?",[name,password],function(err,result){
+  if(err){
+    res.send({message:"error with the query"});
+  }
+  else{
+    if(result.length>0){
+      res.send({logged:true});
 
-  User.findOne({email:username},function(err,founduser){
-
-    if(err)
-    {
-      console.log(err);
+    }else{
+      res.send({message:"Username and password mismatch!"});
+      console.log(result.length);
     }
-    else{
-      if(founduser){
-        bcrypt.compare(password, founduser.password, function(err, result) {
-          if(result===true)
-          {
-            res.render("secrets"); //render feed page instead
 
-            res.send() a json object with logged value
-          }
+  }
+
 });
-
-
-      }
-    }
-  });*/
 
 });
 
@@ -37,18 +36,35 @@ router.post('/Login',function(req,res){
 
 router.post('/Signup',function(req,res){
 
-  const {Name,email,designation,address,ph}=req.body;
+  const {name,email,designation}=req.body;
+  let password=req.body.password;
+  let confirm=req.body.confirm;
+
+
+
+if(confirm==password){
   bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
-    const password=hash;
-    //insert row into register table;
+     password=hash;
 });
+  con.query("INSERT INTO REGISTER VALUES(?,?,?,?)",[name,email,password,designation],function(err,result){
+    if(!err){
+      res.json({success:true});
+    }else {
+      {
+        console.log(err);
+      }
+    }
+  });
+}else{
+  res.send({message:"Password not matching"});
+}
 
 });
 
 
 router.get('/logout', (req, res) => {
     req.logout();
-    res.json({ success: true, message: 'Logout successful' });
+    res.json({ logged: false, message: 'Logout successful' });
     res.redirect("/");
 });
 
