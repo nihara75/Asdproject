@@ -6,14 +6,24 @@ const path=require('path');
 const session=require('express-session');
 const app=express();
 const keys = require('./config');
+const passport=require('passport');
+
 const authUserRoutes = require('./Routes/authenticate.js');
 const postroutes = require('./Routes/post.js');
 const ngoroutes = require('./Routes/Ngocred.js');
+require('./Services/passport.js')(passport);
 
 app.use(bodyparser.urlencoded({ extended: true}));
 app.use(bodyparser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
+app.use(session({
+    secret: 'hello there',
+    resave: true, saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 /*app.use(app.router);
 authUserRoutes.initialize(app);*/
 app.use('/auth', authUserRoutes);
@@ -37,6 +47,6 @@ con.connect(function(err) {
 });
 
 
-app.listen(22000,function(){
+app.listen(3000,function(){
   console.log("App running on port 3000");
 });

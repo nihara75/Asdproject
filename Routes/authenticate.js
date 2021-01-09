@@ -1,6 +1,10 @@
 const router = require('express').Router();
 const bcrypt=require('bcrypt');
 const mysql=require('mysql');
+const passport=require('passport');
+const LocalStrategy=require('passport-local').Strategy;
+const { unauthenticatedOnly } = require('../Middleware/authmid.js');
+
 const saltRounds = 10;
 const con = mysql.createConnection({
     host: 'localhost',
@@ -10,54 +14,46 @@ const con = mysql.createConnection({
 });
 const logged=false;
 
-router.post('/Login',function(req,res){
-let name=req.body.name;
-let password=req.body.password;
-con.query("SELECT NAME,PASSWORD FROM REGISTER WHERE NAME=? AND PASSWORD=?",[name,password],function(err,result){
-  if(err){
-    res.send({message:"error with the query"});
-  }
-  else{
-    if(result.length>0){
-      res.send({logged:true});
+router.post('/Login',unauthenticatedOnly,passport.authenticate('local',{failureRedirect: '/auth/loginFailure'}),function(req,res){
+/*let email=req.body.email;
+let password=req.body.password;*/
+return res.send({ success: true, user: req.user })
 
-    }else{
-      res.send({message:"Username and password mismatch!"});
-      console.log(result.length);
-    }
-
-  }
-
-});
 
 });
 
 
+router.get('/loginFailure', (req, res) => {
+    res.json({ success: false, user: false, message: 'User login failed'});
+});
 
-router.post('/Signup',function(req,res){
+router.post('/Signup',unauthenticatedOnly,async function(req,res){
 
-  const {name,email,designation}=req.body;
+  const {name,role,email}=req.body;
   let password=req.body.password;
   let confirm=req.body.confirm;
 
 
 
 if(confirm==password){
-  bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+
+ await bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
      password=hash;
-});
-  con.query("INSERT INTO REGISTER VALUES(?,?,?,?)",[name,email,password,designation],function(err,result){
-    if(!err){
-      res.json({success:true});
-    }else {
-      {
-        console.log(err);
-      }
-    }
-  });
-}else{
-  res.send({message:"Password not matching"});
-}
+     con.query("INSERT INTO REGISTER VALUES(?,?,?,?)",[name,role,email,password],function(err,result){
+       if(!err){
+         res.json({success:true});
+       }else {
+
+           console.log(err);
+
+       }
+     });
+   });}
+   else{
+     res.send({message:"Password not matching"});
+   }
+
+
 
 });
 
