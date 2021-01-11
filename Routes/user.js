@@ -8,6 +8,10 @@ const con = mysql.createConnection({
     database: 'Volunteer'  //your db name
 });
 
+const { authenticatedOnly } = require('../Middleware/authmid');
+
+// Middlewares
+router.use(authenticatedOnly);
 
 router.get('/enrolled',function(req,res){
   let email=req.user.Email;
@@ -70,7 +74,7 @@ router.post('/enrolled/:title/:name/:id',function(req,res){
 
     });
   }else{
-    
+
   }
 
 

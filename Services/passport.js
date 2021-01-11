@@ -17,7 +17,9 @@ module.exports=function(passport){
 
       // used to deserialize the user
   passport.deserializeUser(function(id, done) {
-  		connection.query("Select * from REGISTER where Email = "+id,function(err,rows){
+  		con.query("Select * from REGISTER where Email = ?",[id],function(err,rows){
+        console.log(err);
+        console.log(rows);
   			done(err, rows[0]);
   		});
       });

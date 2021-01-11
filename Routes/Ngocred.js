@@ -8,6 +8,11 @@ const con = mysql.createConnection({
     database: 'Volunteer'  //your db name
 });
 
+const { authenticatedOnly } = require('../Middleware/authmid');
+
+// Middlewares
+router.use(authenticatedOnly);
+
 router.get('/:type',function(req,res){
   let type=req.params.type;
   let name=req.user.Name;

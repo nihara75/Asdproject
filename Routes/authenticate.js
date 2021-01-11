@@ -17,7 +17,7 @@ const logged=false;
 router.post('/Login',unauthenticatedOnly,passport.authenticate('local',{failureRedirect: '/auth/loginFailure'}),function(req,res){
 /*let email=req.body.email;
 let password=req.body.password;*/
-return res.send({ success: true, user: req.user })
+return res.send({ success: true, user: req.user.Email })
 
 
 });

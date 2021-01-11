@@ -8,8 +8,14 @@ const con = mysql.createConnection({
     database: 'Volunteer'  //your db name
 });
 
+const { authenticatedOnly } = require('../Middleware/authmid');
+
+// Middlewares
+router.use(authenticatedOnly);
 router.get('/check',function(req,res){
+  console.log(req.user);
   let email=req.user.Email;
+  console.log(email);
   con.query("Select * from PROFILE where Email=? and Status IS NOT NULL ",[email],function(err,rows){
     if(!err){
       if(rows.length>0){

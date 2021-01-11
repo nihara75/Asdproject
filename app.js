@@ -29,7 +29,7 @@ app.use(passport.session());
 authUserRoutes.initialize(app);*/
 app.use('/auth', authUserRoutes);
 app.use('/user', userroutes);
-app.use('/user', update);
+app.use('/up', update);
 app.use('/ngo', ngoroutes);
 
 const con = mysql.createConnection({
@@ -49,6 +49,6 @@ con.connect(function(err) {
 });
 
 
-app.listen(6000,function(){
+app.listen(11000,function(){
   console.log("App running on port 3000");
 });
