@@ -9,7 +9,8 @@ const keys = require('./config');
 const passport=require('passport');
 
 const authUserRoutes = require('./Routes/authenticate.js');
-const postroutes = require('./Routes/post.js');
+const userroutes = require('./Routes/user.js');
+const update=require('./Routes/Update.js');
 const ngoroutes = require('./Routes/Ngocred.js');
 require('./Services/passport.js')(passport);
 
@@ -27,7 +28,8 @@ app.use(passport.session());
 /*app.use(app.router);
 authUserRoutes.initialize(app);*/
 app.use('/auth', authUserRoutes);
-app.use('/feed', postroutes);
+app.use('/user', userroutes);
+app.use('/user', update);
 app.use('/ngo', ngoroutes);
 
 const con = mysql.createConnection({
@@ -47,6 +49,6 @@ con.connect(function(err) {
 });
 
 
-app.listen(3000,function(){
+app.listen(6000,function(){
   console.log("App running on port 3000");
 });

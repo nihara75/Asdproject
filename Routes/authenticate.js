@@ -42,6 +42,12 @@ if(confirm==password){
      con.query("INSERT INTO REGISTER VALUES(?,?,?,?)",[name,role,email,password],function(err,result){
        if(!err){
          res.json({success:true});
+         con.query("INSERT INTO PROFILE (Email) VALUES(?)",[email],(err,rows)=>{
+           if(!err)
+           {
+             console.log('success');
+           }
+         });
        }else {
 
            console.log(err);
