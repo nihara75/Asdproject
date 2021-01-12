@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const bcrypt=require('bcrypt');
 const mysql=require('mysql');
+const Sequilize =  require('sequelize');
+const Op = Sequilize.Op;
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -80,28 +82,15 @@ router.post('/enrolled/:title/:name/:id',function(req,res){
 
 });
 
+//Search for keywords and location
+router.get('/search', (req, res)=> {
+  let {term} = req.query;
+  term = term.toLowerCase();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  con.findAll({ where: { Description: {[Op.like]: '%' + term + '%'} } })
+    .then(posts => res.render('posts', {posts} ))
+    .catch(err => console.log(err));
+});
 
 
 module.exports=router;
