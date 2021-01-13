@@ -76,21 +76,37 @@ router.post('/enrolled/:title/:name/:id',function(req,res){
 
     });
   }else{
-
+    con.query('INSERT INTO BLOODDATA(Name,BG,DOB,Sex,District,Ph,Status) VALUES(?,?,?,?,?,?,?)',[name,bg,dob,sex,dist,ph,status],function(err,rows){
+      if(!err){
+        res.send(rows[0]);
+      }
+      else{
+        console.log(err);
+        res.send({message:"error"});
+      }
+    });
   }
-
-
 });
 
 //Search for keywords and location
-router.get('/search', (req, res)=> {
-  let {term} = req.query;
-  term = term.toLowerCase();
+router.get('/search', function(req, res){
+  let term = req.params.term;
+  let dist = req.params.dist;
 
-  con.findAll({ where: { Description: {[Op.like]: '%' + term + '%'} } })
-    .then(posts => res.render('posts', {posts} ))
-    .catch(err => console.log(err));
+  con.query('SELECT * FROM POSTS WHERE Description=? OR District=?'[term, dist], function(err,rows){
+      if(!err){
+      res.send(rows[0]);
+    }
+    else{
+      console.log(err);
+      res.send({message:"error"});
+    }
+  });
 });
+  //con.findAll({ where: { Description: {[Op.like]: '%' + term + '%'} } })
+  //  .then(posts => res.render('posts', {posts} ))
+  //  .catch(err => console.log(err));
+//});
 
 
 module.exports=router;
