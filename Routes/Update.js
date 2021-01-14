@@ -27,9 +27,9 @@ router.use(authenticatedOnly);
 router.get('/check',function(req,res){
 
   let email=req.user.Email;
-  con.query("Select * from PROFILE where Email=$1 and Status IS NOT NULL ",[email],function(err,rows){
+  con.query("Select * from PROFILE where Email=$1 and Status IS NOT NULL ",[email],function(err,result){
     if(!err){
-      if(rows.length>0){
+      if(result.rows.length>0){
         res.json({status:"updated"});
       }
       else{
@@ -66,9 +66,9 @@ router.post('/update',function(req,res){
 
 router.get('/profile',function(req,res){
   let user=req.user.Email;
-  con.query("Select * from PROFILE where Email=$1",[user],function(err,rows){
+  con.query("Select * from PROFILE where Email=$1",[user],function(err,result){
     if(!err){
-      res.send(rows[0]);
+      res.send(result.rows);
     }else{
       console.log(err);
       res.json({message:"error"});

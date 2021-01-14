@@ -24,30 +24,33 @@ const con = new Pool({
 
 module.exports=function(passport){
   passport.serializeUser(function(user, done) {
+
   		done(null, user.Email);
       });
 
       // used to deserialize the user
   passport.deserializeUser(function(id, done) {
-  		con.query("Select * from REGISTER where Email = $1",[id],function(err,rows){
-        console.log(err);
-        console.log(rows);
-  			done(err, rows[0]);
+  		con.query("Select * from REGISTER where Email = $1",[id],function(err,result){
+
+
+  			done(err, result.rows[0]);
   		});
       });
 
   passport.use(new LocalStrategy({usernameField:'email',passwordField:'password'},function(email,password,done){
-    con.query('Select * from REGISTER where Email=$1',[email],function(err,rows){
-      if(!rows.length){
+    con.query('Select * from REGISTER where Email=$1',[email],function(err,result){
+
+
+      if(!result.rows.length){
         return done(null,false,{message:'Email not registered'})
       }
-      console.log(password);
-      console.log(rows[0].Password);
-      bcrypt.compare(password,rows[0].Password,(err,isMatch)=>{
+      
+
+      bcrypt.compare(password,result.rows[0].Password,(err,isMatch)=>{
         if(err) throw err;
         console.log(isMatch);
         if(isMatch){
-          return done(null,rows[0],{message:'Login successful'});
+          return done(null,result.rows[0],{message:'Login successful'});
 
         }else{
           return done(null,false,{message:'Password mismatch'});

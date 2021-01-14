@@ -30,10 +30,10 @@ router.get('/:type',function(req,res){
   let type=req.params.type;
   let name=req.user.Name;
 
-    con.query("select * from POSTS where Name=$1 and Type=$2",[name,type],function(err,rows,fields){
+    con.query("select * from POSTS where Name=$1 and Type=$2",[name,type],function(err,result){
       if(!err){
 
-        res.json({result:rows});
+        res.send(result.rows);
       }else{
         console.log(err);
         res.json({message:"error"});
@@ -45,9 +45,9 @@ router.get('/:type',function(req,res){
 
 router.get('/ug/urgent',function(req,res){
   let name=req.user.Name;
-  con.query("Select * from UNEEDS where Ngoname=$1",[name],function(err,rows){
+  con.query("Select * from UNEEDS where Ngoname=$1",[name],function(err,result){
     if(!err){
-      res.send(rows);
+      res.send(result.rows);
     }else{
       console.log(err);
       res.json({message:"error"});
@@ -66,7 +66,7 @@ router.post('/uneeds',function(req,res){
 
   con.query("INSERT INTO UNEEDS (Ngoname,Description,Ph) VALUES($1,$2,$3)",[name,desc,ph],function(err,rows){
     if(!err){
-      res.json({result:rows[0]});
+      res.json({message:"success"});
     }else{
       console.log(err);
       res.json({message:"error"});
@@ -81,7 +81,7 @@ router.delete('/uneeds/:id',function(req,res){
   let id=req.params.id;
   con.query("Delete from UNEEDS where ID=$1 ",[id],function(err,rows){
     if(!err){
-      res.json({result:rows[0]});
+      res.json({message:"success"});
     }else{
       console.log(err);
       res.json({message:"error"});
@@ -105,7 +105,7 @@ router.post('/:type',function(req,res){
 
   con.query("INSERT INTO POSTS (Title,Description,District,Location,Date,Name,Type) VALUES($1,$2,$3,$4,$5,$6,$7)",[title,desc,dist,loc,date,name,type],function(err,rows){
     if(!err){
-      res.json({result:rows[0]});
+      res.json({message:"success"});
     }else{
       console.log(err);
       res.json({message:"error"});
@@ -138,9 +138,9 @@ router.get('/enrolled/:id',function(req,res){
   let id=req.params.id;
   let name=req.user.Name;
 
-  con.query('Select * from ENROLLED e,PROFILE p where e.Email=p.Email and Ngoname=$1 and ID=$2',[name,id],function(err,rows){
+  con.query('Select * from ENROLLED e,PROFILE p where e.Email=p.Email and Ngoname=$1 and ID=$2',[name,id],function(err,result){
     if(!err){
-      res.json({result:rows});
+      res.send(result.rows);
     }else{
       res.json({message:"error"});
     }
@@ -164,10 +164,10 @@ router.put('/enrolled/:email/:id',function(req,res){
 
 router.get('/:type',function(res,req){
   if (type==='blood'){
-    let bg=req.params.bg;
-    con.query('SELECT Name,DOB,Sex,District,Ph FROM BLOODATA WHERE BG=$1 ORDER BY District',[bg],function(err,rows){
+    let bg=req.body.bg;
+    con.query('SELECT Name,DOB,Sex,District,Ph FROM BLOODATA WHERE BG=$1 ORDER BY District',[bg],function(err,result){
       if(!err){
-        res.send(rows[0]);
+        res.send(result.rows);
       }else{
         res.json({message:"error"});
       }

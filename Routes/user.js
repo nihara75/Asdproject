@@ -28,9 +28,9 @@ router.use(authenticatedOnly);
 
 router.get('/enrolled',function(req,res){
   let email=req.user.Email;
-  con.query('select * from ENROLLED where Email=$1',[email],function(err,rows){
+  con.query('select * from ENROLLED where Email=$1',[email],function(err,result){
     if(!err){
-      res.send(rows);
+      res.send(result.rows);
     }
     else{
       console.log(err);
@@ -41,9 +41,9 @@ router.get('/enrolled',function(req,res){
 
 router.get('/uneeds',function(req,res){
   let email=req.user.Email;
-  con.query('select * from UNEEDS',function(err,rows){
+  con.query('select * from UNEEDS',function(err,result){
     if(!err){
-      res.send(rows);
+      res.send(result.rows);
     }
     else{
       console.log(err);
@@ -55,9 +55,9 @@ router.get('/uneeds',function(req,res){
 
 router.get('/posts/:type',function(req,res){
   let type=req.params.type;
-  con.query('select * from POSTS where Type=$1',[type],function(err,rows){
+  con.query('select * from POSTS where Type=$1',[type],function(err,result){
     if(!err){
-      res.send(rows);
+      res.send(result.rows);
     }
     else{
       console.log(err);
@@ -92,7 +92,7 @@ router.post('/enrolled/:title/:name/:id',function(req,res){
   else{
     con.query('INSERT INTO ENROLLED VALUES($1,$2,$3,$4,$5)',[id,name,email,title,status],function(err,rows){
       if(!err){
-        res.send(rows);
+        res.json({message:"success"});
       }
       else{
         console.log(err);
@@ -106,9 +106,9 @@ router.get('/postsearch', function(req, res){
   let term = req.body.term;
   let dist = req.body.dist;
 
-  con.query('SELECT * FROM POSTS WHERE Description=$1 OR District=$2'[term, dist], function(err,rows){
+  con.query('SELECT * FROM POSTS WHERE Description=$1 OR District=$2'[term, dist], function(err,result){
       if(!err){
-      res.send(rows);
+      res.send(result.rows);
     }
     else{
       console.log(err);
@@ -120,9 +120,9 @@ router.get('/postsearch', function(req, res){
 router.get('/uneedsearch', function(req, res){
   let term = req.body.term;
 
-  con.query('SELECT * FROM UNEEDS WHERE Description=$1'[term], function(err,rows){
+  con.query('SELECT * FROM UNEEDS WHERE Description=$1'[term], function(err,result){
       if(!err){
-      res.send(rows);
+      res.send(result.rows);
     }
     else{
       console.log(err);
