@@ -1,12 +1,25 @@
 const router = require('express').Router();
 const bcrypt=require('bcrypt');
 const mysql=require('mysql');
-const con = mysql.createConnection({
+
+/*const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'Nihar@25*',
     database: 'Volunteer'  //your db name
-});
+});*/
+const Pool = require('pg').Pool
+const con = new Pool({
+  user: 'zwqbogojihtevw',
+  host: 'ec2-52-22-135-159.compute-1.amazonaws.com',
+  database: 'd4dnnion0o8cnp',
+  password: '986adc236b287eb9707dcde80bc638768d5e655f2af7288204875c35162241f4',
+  port: 5432,
+  ssl:{
+    rejectUnauthorized:false,
+    require:true,
+  },
+})
 
 const { authenticatedOnly } = require('../Middleware/authmid');
 
@@ -17,7 +30,7 @@ router.get('/:type',function(req,res){
   let type=req.params.type;
   let name=req.user.Name;
 
-    con.query("select * from POSTS where Name=? and Type=?",[name,type],function(err,rows,fields){
+    con.query("select * from POSTS where Name=$1 and Type=$2",[name,type],function(err,rows,fields){
       if(!err){
 
         res.json({result:rows});
@@ -32,7 +45,7 @@ router.get('/:type',function(req,res){
 
 router.get('/ug/urgent',function(req,res){
   let name=req.user.Name;
-  con.query("Select * from UNEEDS where Ngoname=?",[name],function(err,rows){
+  con.query("Select * from UNEEDS where Ngoname=$1",[name],function(err,rows){
     if(!err){
       res.send(rows);
     }else{
@@ -51,7 +64,7 @@ router.post('/uneeds',function(req,res){
   let desc=req.body.desc;
   let ph=req.body.ph;
 
-  con.query("INSERT INTO UNEEDS (Ngoname,Description,Ph) VALUES(?,?,?)",[name,desc,ph],function(err,rows){
+  con.query("INSERT INTO UNEEDS (Ngoname,Description,Ph) VALUES($1,$2,$3)",[name,desc,ph],function(err,rows){
     if(!err){
       res.json({result:rows[0]});
     }else{
@@ -66,7 +79,7 @@ router.post('/uneeds',function(req,res){
 
 router.delete('/uneeds/:id',function(req,res){
   let id=req.params.id;
-  con.query("Delete from UNEEDS where ID=? ",[id],function(err,rows){
+  con.query("Delete from UNEEDS where ID=$1 ",[id],function(err,rows){
     if(!err){
       res.json({result:rows[0]});
     }else{
@@ -90,7 +103,7 @@ router.post('/:type',function(req,res){
   let date=req.body.dat;
 
 
-  con.query("INSERT INTO POSTS (Title,Description,District,Location,Date,Name,Type) VALUES(?,?,?,?,?,?,?)",[title,desc,dist,loc,date,name,type],function(err,rows){
+  con.query("INSERT INTO POSTS (Title,Description,District,Location,Date,Name,Type) VALUES($1,$2,$3,$4,$5,$6,$7)",[title,desc,dist,loc,date,name,type],function(err,rows){
     if(!err){
       res.json({result:rows[0]});
     }else{
@@ -108,7 +121,7 @@ router.delete('/:type/:id',function(req,res){
   let type=req.params.type;
   let id=req.params.id;
 
-  con.query("Delete from POSTS where ID=? ",[id],function(err,rows){
+  con.query("Delete from POSTS where ID=$1 ",[id],function(err,rows){
     if(!err){
       res.json({result:rows[0]});
     }else{
@@ -125,7 +138,7 @@ router.get('/enrolled/:id',function(req,res){
   let id=req.params.id;
   let name=req.user.Name;
 
-  con.query('Select * from ENROLLED e,PROFILE p where e.Email=p.Email and Ngoname=? and ID=?',[name,id],function(err,rows){
+  con.query('Select * from ENROLLED e,PROFILE p where e.Email=p.Email and Ngoname=$1 and ID=$2',[name,id],function(err,rows){
     if(!err){
       res.json({result:rows});
     }else{
@@ -138,7 +151,7 @@ router.put('/enrolled/:email/:id',function(req,res){
   let id=req.params.id;
   let email=req.params.email;
   let status=1;
-  con.query('UPDATE ENROLLED SET Status=? WHERE ID=? AND Email=?',[status,id,email],function(err,rows){
+  con.query('UPDATE ENROLLED SET Status=$1 WHERE ID=$2 AND Email=$3',[status,id,email],function(err,rows){
     if(!err){
       res.json({message:"updated"});
     }else{
@@ -152,7 +165,7 @@ router.put('/enrolled/:email/:id',function(req,res){
 router.get('/:type',function(res,req){
   if (type==='blood'){
     let bg=req.params.bg;
-    con.query('SELECT Name,DOB,Sex,District,Ph FROM BLOODATA WHERE BG=? ORDER BY District',[bg],function(err,rows){
+    con.query('SELECT Name,DOB,Sex,District,Ph FROM BLOODATA WHERE BG=$1 ORDER BY District',[bg],function(err,rows){
       if(!err){
         res.send(rows[0]);
       }else{

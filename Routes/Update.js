@@ -1,12 +1,24 @@
 const router = require('express').Router();
 const bcrypt=require('bcrypt');
 const mysql=require('mysql');
-const con = mysql.createConnection({
+/*const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'Nihar@25*',
     database: 'Volunteer'  //your db name
-});
+});*/
+const Pool = require('pg').Pool
+const con = new Pool({
+  user: 'zwqbogojihtevw',
+  host: 'ec2-52-22-135-159.compute-1.amazonaws.com',
+  database: 'd4dnnion0o8cnp',
+  password: '986adc236b287eb9707dcde80bc638768d5e655f2af7288204875c35162241f4',
+  port: 5432,
+  ssl:{
+    rejectUnauthorized:false,
+    require:true,
+  },
+})
 
 const { authenticatedOnly } = require('../Middleware/authmid');
 
@@ -15,7 +27,7 @@ router.use(authenticatedOnly);
 router.get('/check',function(req,res){
 
   let email=req.user.Email;
-  con.query("Select * from PROFILE where Email=? and Status IS NOT NULL ",[email],function(err,rows){
+  con.query("Select * from PROFILE where Email=$1 and Status IS NOT NULL ",[email],function(err,rows){
     if(!err){
       if(rows.length>0){
         res.json({status:"updated"});
@@ -39,7 +51,7 @@ router.post('/update',function(req,res){
     res.json({message:"can't update"});
   }
   else{
-    con.query("UPDATE PROFILE SET Dob=?,Institution=?,District=?,Ph=?,ImageU=?,Status=? WHERE Email=?",[dob,institution,district,ph,url,status,email],function(err,rows){
+    con.query("UPDATE PROFILE SET Dob=$1,Institution=$2,District=$3,Ph=$4,ImageU=$5,Status=$6 WHERE Email=$7",[dob,institution,district,ph,url,status,email],function(err,rows){
       if(!err){
         res.json({message:"success"})
       }else{
@@ -54,7 +66,7 @@ router.post('/update',function(req,res){
 
 router.get('/profile',function(req,res){
   let user=req.user.Email;
-  con.query("Select * from PROFILE where Email=?",[user],function(err,rows){
+  con.query("Select * from PROFILE where Email=$1",[user],function(err,rows){
     if(!err){
       res.send(rows[0]);
     }else{

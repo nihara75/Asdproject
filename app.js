@@ -40,13 +40,24 @@ app.use('/user', userroutes);
 app.use('/up', update);
 app.use('/ngo', ngoroutes);
 
-const con = mysql.createConnection({
+/*const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'Nihar@25*',
     database: 'Volunteer'  //your db name
-});
-
+});*/
+const Pool = require('pg').Pool
+const con = new Pool({
+  user: 'zwqbogojihtevw',
+  host: 'ec2-52-22-135-159.compute-1.amazonaws.com',
+  database: 'd4dnnion0o8cnp',
+  password: '986adc236b287eb9707dcde80bc638768d5e655f2af7288204875c35162241f4',
+  port: 5432,
+  ssl:{
+    rejectUnauthorized:false,
+    require:true,
+  },
+})
 
 con.connect(function(err) {
   if (err) {
