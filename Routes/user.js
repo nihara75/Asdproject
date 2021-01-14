@@ -27,7 +27,7 @@ const { authenticatedOnly } = require('../Middleware/authmid');
 router.use(authenticatedOnly);
 
 router.get('/enrolled',function(req,res){
-  let email=req.user.Email;
+  let email=req.user.email;
   con.query('select * from ENROLLED where Email=$1',[email],function(err,result){
     if(!err){
       res.send(result.rows);
@@ -40,7 +40,7 @@ router.get('/enrolled',function(req,res){
 });
 
 router.get('/uneeds',function(req,res){
-  let email=req.user.Email;
+  let email=req.user.email;
   con.query('select * from UNEEDS',function(err,result){
     if(!err){
       res.send(result.rows);
@@ -71,7 +71,7 @@ router.get('/posts/:type',function(req,res){
 router.post('/enrolled/:title/:name/:id',function(req,res){
   let id=req.params.id;
   let name=req.params.name;
-  let email=req.user.Email;
+  let email=req.user.email;
   let title=req.params.title;
   let type=req.query.type;
   let status=0;

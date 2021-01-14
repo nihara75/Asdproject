@@ -28,7 +28,7 @@ router.use(authenticatedOnly);
 
 router.get('/:type',function(req,res){
   let type=req.params.type;
-  let name=req.user.Name;
+  let name=req.user.name;
 
     con.query("select * from POSTS where Name=$1 and Type=$2",[name,type],function(err,result){
       if(!err){
@@ -44,7 +44,7 @@ router.get('/:type',function(req,res){
 
 
 router.get('/ug/urgent',function(req,res){
-  let name=req.user.Name;
+  let name=req.user.name;
   con.query("Select * from UNEEDS where Ngoname=$1",[name],function(err,result){
     if(!err){
       res.send(result.rows);
@@ -60,7 +60,7 @@ router.get('/ug/urgent',function(req,res){
 
 
 router.post('/uneeds',function(req,res){
-  let name=req.user.Name;
+  let name=req.user.name;
   let desc=req.body.desc;
   let ph=req.body.ph;
 
@@ -95,7 +95,7 @@ router.delete('/uneeds/:id',function(req,res){
 
 router.post('/:type',function(req,res){
   let type=req.params.type;
-  let name=req.user.Name;
+  let name=req.user.name;
   let title=req.body.title;
   let desc=req.body.desc;
   let dist=req.body.dist;
@@ -136,7 +136,7 @@ router.delete('/:type/:id',function(req,res){
 
 router.get('/enrolled/:id',function(req,res){
   let id=req.params.id;
-  let name=req.user.Name;
+  let name=req.user.name;
 
   con.query('Select * from ENROLLED e,PROFILE p where e.Email=p.Email and Ngoname=$1 and ID=$2',[name,id],function(err,result){
     if(!err){
