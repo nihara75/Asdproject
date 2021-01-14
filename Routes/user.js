@@ -105,7 +105,7 @@ router.get('/postsearch', function(req, res){
     }
   });
 });
-/*
+
 router.get('/uneedsearch', function(req, res){
   let term = req.body.term;
 
@@ -119,7 +119,7 @@ router.get('/uneedsearch', function(req, res){
     }
   });
 });
-*/
+
   //con.findAll({ where: { Description: {[Op.like]: '%' + term + '%'} } })
   //  .then(posts => res.render('posts', {posts} ))
   //  .catch(err => console.log(err));
