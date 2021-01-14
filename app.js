@@ -8,6 +8,12 @@ const app=express();
 const keys = require('./config');
 const passport=require('passport');
 
+//const Prohairesis=require('prohairesis');
+//const env=require('./env');
+
+//const database=new Prohairesis(env.CLEARDB_DATABASE_URL);
+
+
 const authUserRoutes = require('./Routes/authenticate.js');
 const userroutes = require('./Routes/user.js');
 const update=require('./Routes/Update.js');
@@ -27,6 +33,8 @@ app.use(passport.session());
 
 /*app.use(app.router);
 authUserRoutes.initialize(app);*/
+
+
 app.use('/auth', authUserRoutes);
 app.use('/user', userroutes);
 app.use('/up', update);

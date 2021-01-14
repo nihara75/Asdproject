@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const bcrypt=require('bcrypt');
 const mysql=require('mysql');
-const Sequilize =  require('sequelize');
-const Op = Sequilize.Op;
+//const Sequilize =  require('sequelize');
+//const Op = Sequilize.Op;
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -89,9 +89,9 @@ router.post('/enrolled/:title/:name/:id',function(req,res){
 });
 
 //Search for keywords and location
-router.get('/search', function(req, res){
-  let term = req.params.term;
-  let dist = req.params.dist;
+router.get('/postsearch', function(req, res){
+  let term = req.body.term;
+  let dist = req.body.dist;
 
   con.query('SELECT * FROM POSTS WHERE Description=? OR District=?'[term, dist], function(err,rows){
       if(!err){
@@ -103,6 +103,21 @@ router.get('/search', function(req, res){
     }
   });
 });
+/*
+router.get('/uneedsearch', function(req, res){
+  let term = req.body.term;
+
+  con.query('SELECT * FROM UNEEDS WHERE Description=?'[term], function(err,rows){
+      if(!err){
+      res.send(rows[0]);
+    }
+    else{
+      console.log(err);
+      res.send({message:"error"});
+    }
+  });
+});
+*/
   //con.findAll({ where: { Description: {[Op.like]: '%' + term + '%'} } })
   //  .then(posts => res.render('posts', {posts} ))
   //  .catch(err => console.log(err));

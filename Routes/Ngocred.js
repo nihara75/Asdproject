@@ -26,9 +26,6 @@ router.get('/:type',function(req,res){
       }
 
     });
-
-
-
 });
 
 router.get('/uneeds',function(req,res){
@@ -113,10 +110,6 @@ router.delete('/:type/:id',function(req,res){
 
 });
 
-
-
-
-
 router.get('/enrolled',function(res,req){
   let name=req.user.Name;
   con.query('Select * from ENROLLED where Ngoname=?',[name],function(err,rows){
@@ -142,20 +135,19 @@ router.put('/enrolled/:email/:id',function(res,req){
   });
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*
+router.get('/:type',function(res,req){
+  if (type==='blood'){
+    let bg=req.params.bg;
+    con.query('SELECT Name,DOB,Sex,District,Ph FROM BLOODATA WHERE BG=? ORDER BY District',[bg],function(err,rows){
+      if(!err){
+        res.send(rows[0]);
+      }else{
+        res.json({message:"error"});
+      }
+    });
+  }
+});*/
 
 
 module.exports=router;
