@@ -26,7 +26,8 @@ const { authenticatedOnly } = require('../Middleware/authmid');
 router.use(authenticatedOnly);
 router.get('/check',function(req,res){
 
-  let email=req.user.email;
+  //let email=req.user.email;
+  let email=req.body.email;
   console.log(email);
   con.query("Select * from PROFILE where Email=$1 and Status IS NOT NULL ",[email],function(err,result){
     if(!err){
@@ -47,7 +48,8 @@ router.post('/update',function(req,res){
   let ph=req.body.ph;
   let url=req.body.image;
   let status=1;
-  let email=req.user.email;
+  //let email=req.user.email;
+  let email=req.body.email;
   if(dob=== null && institution === null && district === null && ph === null && url===null ){
     res.json({message:"can't update"});
   }
@@ -66,7 +68,8 @@ router.post('/update',function(req,res){
 
 
 router.get('/profile',function(req,res){
-  let user=req.user.email;
+  //let user=req.user.email;
+  let user=req.body.email;
   con.query("Select * from PROFILE where Email=$1",[user],function(err,result){
     if(!err){
       res.send(result.rows);
