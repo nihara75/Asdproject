@@ -17,7 +17,7 @@ const logged=false;
 router.post('/Login',unauthenticatedOnly,passport.authenticate('local',{failureRedirect: '/auth/loginFailure'}),function(req,res){
 /*let email=req.body.email;
 let password=req.body.password;*/
-return res.send({ success: true, user: req.user.Email })
+ res.send({ success: true, user: req.user })
 
 
 });
@@ -42,7 +42,7 @@ if(confirm==password){
      con.query("INSERT INTO REGISTER VALUES(?,?,?,?)",[name,role,email,password],function(err,result){
        if(!err){
          res.json({success:true});
-         con.query("INSERT INTO PROFILE (Email) VALUES(?)",[email],(err,rows)=>{
+         con.query("INSERT INTO PROFILE (Email,Name) VALUES(?,?)",[email,name],(err,rows)=>{
            if(!err)
            {
              console.log('success');
@@ -67,7 +67,7 @@ if(confirm==password){
 router.get('/logout', (req, res) => {
     req.logout();
     res.json({ logged: false, message: 'Logout successful' });
-    res.redirect("/");
+
 });
 
 

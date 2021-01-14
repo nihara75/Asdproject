@@ -13,9 +13,8 @@ const { authenticatedOnly } = require('../Middleware/authmid');
 // Middlewares
 router.use(authenticatedOnly);
 router.get('/check',function(req,res){
-  console.log(req.user);
+
   let email=req.user.Email;
-  console.log(email);
   con.query("Select * from PROFILE where Email=? and Status IS NOT NULL ",[email],function(err,rows){
     if(!err){
       if(rows.length>0){
@@ -35,12 +34,12 @@ router.post('/update',function(req,res){
   let ph=req.body.ph;
   let url=req.body.image;
   let status=1;
-  let email=req.user.email;
+  let email=req.user.Email;
   if(dob=== null && institution === null && district === null && ph === null && url===null ){
     res.json({message:"can't update"});
   }
   else{
-    con.query("INSERT INTO PROFILE (Dob,institution,District,Ph,ImageU,Status) VALUES(?,?,?,?,?,?)",[dob,institution,district,ph,url,status],function(err,rows){
+    con.query("UPDATE PROFILE SET Dob=?,Institution=?,District=?,Ph=?,ImageU=?,Status=? WHERE Email=?",[dob,institution,district,ph,url,status,email],function(err,rows){
       if(!err){
         res.json({message:"success"})
       }else{
@@ -55,7 +54,7 @@ router.post('/update',function(req,res){
 
 router.get('/profile',function(req,res){
   let user=req.user.Email;
-  con.query("Select * from PROFILE where Email=?",[email],function(err,rows){
+  con.query("Select * from PROFILE where Email=?",[user],function(err,rows){
     if(!err){
       res.send(rows[0]);
     }else{
