@@ -25,7 +25,7 @@ const con = new Pool({
 module.exports=function(passport){
   passport.serializeUser(function(user, done) {
 
-  		done(null, user.Email);
+  		done(null, user.email);
       });
 
       // used to deserialize the user
@@ -44,9 +44,9 @@ module.exports=function(passport){
       if(!result.rows.length){
         return done(null,false,{message:'Email not registered'})
       }
-      
 
-      bcrypt.compare(password,result.rows[0].Password,(err,isMatch)=>{
+
+      bcrypt.compare(password,result.rows[0].password,(err,isMatch)=>{
         if(err) throw err;
         console.log(isMatch);
         if(isMatch){
