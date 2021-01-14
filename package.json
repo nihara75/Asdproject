@@ -25,5 +25,7 @@
     "pg": "^8.5.1",
     "sequelize": "^6.3.5",
     "sequelize-cli": "^6.2.0"
+    "moment": "^2.24.0",
+    "pdfkit": "^0.11.0"
   }
 }
